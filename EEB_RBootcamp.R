@@ -146,7 +146,7 @@ A <- matrix(1:9, nrow = 3, ncol = 3, byrow = TRUE); A
 matrix(1, nrow = 50, ncol = 50)
 # Matrix above creates 50x50 and populates each field with 1
 
-#9.2.1.0.1 Exercise - creating matrices
+# 9.2.1.0.1 Exercise - creating matrices
 v <- rep(1:2, 4)
 v
 # Note how code above makes repetition 1, 2, 1, 2, and not 1, 1, 2, 2
@@ -161,3 +161,30 @@ x
 example <- rnorm(n, mean = 1, sd = 2)
 example.matrix <- matrix(example, nrow = 5, ncol = 7)
 example.matrix
+
+# Use diag(x, y) func to create nXn matrix with data vector x on a diagonal
+# Example: diag(1, 5) creates matrix where 1s form diagonal and 0 in all other fields
+diag(1, 5)
+
+A <- matrix(0,3,4)
+data.entry(A)
+
+# cbind() func bines columns of two objects. rbind() for rows.
+C <- cbind(1:3,4:6,5:7); C
+# This creates 3 columns with 1:3 in col 1, 4:6 in col 2, and 5:7 in col 3
+# This example has 3 columns and 3 rows
+
+D <- rbind(1:3,4:6); D
+# This creates 2 rows with 1:3 in row 1 and 4:6 in row 2
+# This example has 2 columns and 2 rows
+
+# 9.2.2.0.1 Exercise - cbind() and rbind()
+rbind(C, D) # This works
+cbind(C, C) # This works
+cbind(C, D) # This does not work because the C vector has 3 col and D vector
+# 2 col. The # of rows of matrices must match in order to cbind()
+
+# 9.2.3 Matrix indexing
+# Sample below doesn't work since no object set for A, so not sure what to do???
+z <- A[2,3]
+A[2,2:3];
