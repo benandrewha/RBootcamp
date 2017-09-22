@@ -3,6 +3,9 @@ install.packages("GEIGER")
 install.packages("ggplot2")
 install.packages(c("plyr", "reshape2"))
 
+#####EEB 201: Introduction to R Programming #####
+### Benjamin Ha ###
+
 # Chapter 9: Data structures in R
 # Section 9.1: Vectors
 
@@ -227,3 +230,282 @@ dat
 data.url.2 <- "http://kingaa.github.io/R_Tutorial/hurricanes.csv"
 dat.2 <- read.csv(hurricanes.csv)
 dat.2
+
+
+
+
+
+##### R Bootcamp Course: Day I Friday, September 22, 2017
+
+# using ? before a func provides its definition (e.g., ?lm, ?cbind(), etc.)
+# you can also Google stack overflow website for help guide
+
+# getwd()           func shows the folder you assigned to save your scripts
+# cat()             prints code onto the screen you assigned to a variable
+# ls()              lists out all variables you currently have assigned in script(s)
+# rm(list = ls())   func will remove all the variables within your script
+#                   If you want a specific object to be removed, include that
+#                   text within the ls() code
+# runif()           random uniform func to provide random #s equal to the amt you want
+# dim()             provides dimensions (# of rows, cols) of a variable
+# head() & tail ()  provides you first/last set of lines of data you've recorded
+# $ operator        isolates the col you want within a dataframe (e.g. pirates$beard)
+# is.na()           returns logical values for a dataframe where NA is a value
+#                   In this case, NA means you didn't enter a data point there
+# na.omit()         Func to only get non-NA values
+
+
+### Intro to control statements
+# **for**           statements perform an action over a range
+#                   Example: for (some range) {do something}
+
+for (ii in 1:5){
+  cat("\nthe number ", ii) # The ii in this line says to print ii, which is 1:5
+}
+
+# ii is variable being assigned 1:5
+# {} is action
+# \n means new line.
+# As a whole, this says add "the number is" as a new line for every variable ii
+
+notfish <- c("bat", "dolphin", "fish", "soldier")
+for(animal in notfish){
+  cat(animal, "fish\n", sep = "")
+}
+
+# **for** func now adds word "fish" at end of each notfish value
+# (e.g., batfish, fishfish)
+
+# **while**         Another loop that keeps running until the conditional part of
+#                   the expression fails. This is when loop terminates
+#                   while (some condition is TRUE){do something}
+
+xx <- 10
+while (xx < 100){
+  xx <- xx + 10
+  cat(xx, "\n")
+}
+
+# **while** func only adds 10 to each xx value until the criteria is no longer TRUE
+# hence why there is no 110 value since 110 > 100
+
+xx <- 1
+
+while(xx < 5){
+  xx <- xx + 1
+  if (xx == 3) {
+    break; }
+}
+
+# you add the break; operator to stop the loop after xx = 3. 
+# this prevents you from writing an infinite loop.
+# WARNING: Infinite loops will happen on accident. If you exclude the break; operator
+# R/your comp will run forever and ever and take up a lot of memory than needed
+# to end it, you would need to close R. joy.
+
+
+### Intro to plotting
+# Normal distribution curve
+# rnorm()           means random normal distribution. must assign mean and std dv
+#                   Example: rnorm(n, mean, sd)
+
+s1 <- rnorm(1000, mean = 0, sd = 1)
+head(s1) # Saves you from printing all random values and breaking your computer
+         # and instead only prints the first couple of lines
+s3 <- rnorm(1000, mean = 0, sd = 10)
+
+pdf(file="Normal_hist.pdf", width = 4, height = 7) # preps to save your histogram as 
+# a pdf. Automatically saved into your current working directory. This func opens file
+
+par(mfrow = c(2, 1), mar = c(4, 4, 3, 2)) # sets plotting area and margins
+# mfrow = 2 rows, 1 col
+# mar = margins from (bottom, left, top, right)
+# use ?par to get help on adding more details to the plot
+
+hist(s1, # Make first histogram. Hist(x) where x = vector
+     col = "seagreen", # color
+     xlab = "Value", # x label
+     main = "Sigma=1") # title
+hist(s3,  # Make second histogram
+     col = "blue", 
+     xlab = "Value", 
+     main = "Sigma=3")
+# Note how ylab is default "Frequency" but you can change it as needed
+
+# Instead of writing "Sigma" you can use:
+hist(s1, 
+     col = "seagreen", 
+     xlab = "Value", 
+     main = expression(paste(sigma, "=1"))) # the "=1" adds words after sigma notation
+
+dev.off() # add this code to shut off current output device. If you do not add this,
+# then all plots you continue to create will auto be added to this same file
+
+plot(s1, s3) # scatter plot for plot(x, y)
+
+
+
+#Smooth density plot
+pdf(file = "Normal_density.pdf", width = 6, height = 6) #open file
+par(mfrow = c(1, 1), # par means parameter
+    mar = c(4, 4, 3, 2)) # sets plotting area and margins
+plot(density(s1), 
+     col = "forest green", 
+     lwd = 4, # controls line thickness. Default is 1
+     xlab = "Value", 
+     xlim = c(-15, 15), # min and max of x axis
+     main = "Normal distribution")
+lines(density(s3), # Use lines() to combine and overlap 2 graphs
+      col = 4, 
+      lwd = 4)
+# if you used plot() instead of lines() for 2nd histogram, you would only plot
+# the s3 and the s1 would be removed
+# Also note how s3 has larger std dv so you would need to modify the xlim
+
+legend(-15, 0.4, c("sigma=1", "sigma=3"), # This also implies order
+         lwd = 4, # You can replace this with pch instead to use shapes instead of lines
+         col = c("forest green", 4), # order of colors correlate to order of text
+         cex = 1) # Size of legend relative to entire graph
+
+abline(v = quantile(s1, 0.9), # Add verical line at desired location
+       lty = 2, lwd = 2, col = "forest green")
+# For quantile(), 0.9 means 9% of values that are the upper 10% of values
+
+abline(v = quantile(s3, 0.9), # 2nd verical line for s3 data
+       lty = 2, lwd = 2, col = "blue")
+
+dev.off() # Remember, always close this out!!!
+
+
+
+# Boxplots
+pdf(file = "Normal_boxplot.pdf")
+# cbind()         combines vectors by columns
+#                 Example: cbind(s1, s3) gives you 1000 rows, 2 cols
+# rbind()         combines vectors by rows
+#                 Example: rbind(s1, s3) gives you 2 rows, 1000 cols
+# c()             combines vectors with no organization.
+#                 Example: c(s1, s3) outputs 2000 values
+
+#If you do $breaks for each vector, you will get different sets of breaks because
+# each data vector contains diff data (e.g., differing std dv)
+bins <- seq(-30, 30, by = 1) # establish your own bins to be applied consistently
+# to both data sets
+
+hist(s1, breaks = bins)$breaks
+hist(s3, breaks = bins)$breaks # Now breaks for both s1 and s3 are consistent
+counts_s1 <- hist(s1, breaks = bins)$counts
+counts_s3 <- hist(s3, breaks = bins)$counts
+# Uh oh. Both counts read back an error because the max(s3) is larger than 10
+max(s3)
+min(s3)
+# If this happens, modify your bins to fall within max range
+# Still not working, not sure why
+barplot(rbind(counts_s1, counts_s3),
+        beside = TRUE, # puts bars beside one another. If false, they will overlap
+        names = ) 
+#Incomplete code
+
+sum(s1 > 3) # Returns quantity of values in s1 that are > 3
+
+
+# Weird and funky R stuff
+x <- rnorm(100) # Assign random numbers to x vector
+y <- x + rnorm(100, sd = 0.2) # Assign more random numbers to y vector
+
+plot(x, y, 
+     pch = 19, 
+     cex.lab = 2, # controls size of labels on the axis
+     cex.axis = 2) # controls size of axis line itself and the values
+
+
+
+
+### R Bootcamp Day I Exercises - September 22, 2017
+# Alfaro Bootcamp Exercise I
+
+# Exercise 1
+# Write a for loop statements so that it runs from 1:9 and prints following output
+for (ii in 1:9){
+  if (ii <= 8) {
+    cat("\n")
+  }
+  if (ii == 9) {
+    cat("\n*")
+  }
+}
+
+# Exercise 2
+# Modify your for loop so that it prints 10 asterisks, with each asterisk 
+# separated by exactly one ampersand sign (&), with no spaces or new line characters.
+for (ii in 1:10){
+  cat("*&")
+}
+
+# Exercise 3
+# by hand, figure out the initial values of these variables and values at the
+# start and end of each iteration of the loop
+
+dogs <- 10; # Assigns value 10 at variable dogs
+for (i in 1:5){ # States for every number i from 1:5
+  dogs <- dogs + 1; # Add 1 to dogs variable. Value should be 11
+}
+###
+meatloaf <- 0; # Assigns value 0 to variable meatloaf
+for (i in 5:9){ # States for every number i from 5:9
+  meatloaf <- meatloaf - i + 1; # Subtracts i (within 5:9) from 0, add 1
+  cat(meatloaf) # First value -4. Last value - 30
+} 
+a <- 0 - 5 + 1; a # First value
+b <- a - 6 + 1; b
+c <- b - 7 + 1; c
+d <- c - 8 + 1; d
+e <- d - 9 + 1; e # Last value
+###
+bubbles <- 12; # Assigns value 12 to variable bubbles
+for (i in -1:-4){ # States for every number i from -1:-4
+  bubbles <- i; # Value is -4
+}
+
+# Exercise 4
+# modify this code so that it will print out a message during presidential 
+# as well as congressional election years
+
+### you can use the if statement with the modulus operator to conditionally
+### perform operations
+years <- c( 2015, 2016, 2018, 2020, 2021)
+for(ii in 1:length(years)){
+  if(years[ii] %% 2 == 0){
+    cat(years[ii], 'Hooray, congressional elections!', sep = '\t', fill = T)
+  }
+  if(years[ii] %% 4 == 0){
+    cat(years[ii], 'Hooray, presidential elections!', sep = '\t', fill = T)
+  }
+  
+}
+
+# Exercise 5
+# More fun with loops. Here are the bank accounts from seven randomly selected 
+# UCLA grad students
+
+bankAccounts <- c(10, 9.2, 5.6, 3.7, 8.8, 0.5);
+compounded <- interestRate * rep(bankAccounts) + rep(bankAccounts)
+
+# Now look at the error message the following lines of code produce.
+# Can you think of a way to modify this loop so that the loop will 
+# compound the interest?
+
+interestRate <- 0.0125;
+for (i in 1:length(bankAccounts)) {
+  compounded[i] <- interestRate * bankAccounts[i] + bankAccounts[i]; }
+compounded
+# Does not work because compounded function does not yet exist
+
+# HINT: variables must be initialized before you can perform operations on them
+# HINT 2: look at the rep() function and see if you can use that to initialize 
+# a variable that will help you.
+
+# Exercise 6
+# Go back to the compounded interest example. Suppose we now want to compound 
+# the interest annually, but across a period of 5 years. The for loop we 
+# discussed earlier only compounds for a single year.
