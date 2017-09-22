@@ -507,5 +507,59 @@ compounded
 
 # Exercise 6
 # Go back to the compounded interest example. Suppose we now want to compound 
-# the interest annually, but across a period of 5 years. The for loop we 
+# the interest annually, but across a period of 5 years. The **for** loop we 
 # discussed earlier only compounds for a single year.
+
+bankAccounts <- c(10, 9.2, 5.6); #define bank accounts here
+interestRate <- 0.0525;   
+house <- c(4.8, 3.8, 5.7); #deduct
+food<- c(3.5, 4.3, 5.0);    #deduct
+fun <- c(7.8, 2.1, 10.5);  #deduct
+#and incomes (through TAships) of 
+income <- c(21, 21, 21); #add this
+
+
+for (j in 1:5) { # Note: j and i are simply objects. You can use a name!!!
+  for (i in 1:length(bankAccounts)) {
+    #step 1 modify bankAccounts so that amounts reflect income and expenses
+    bankAccounts.expenses <- (bankAccounts - house - food - fun + income)
+    bankAccounts.expenses
+    
+    #step 2 calculate interest and add to accounts from step 1
+    #you can actually use the line you have already written if you
+    #modify amounts in bankAccounts directly in step 1
+    bankAccounts.winterest <- bankAccounts.2 * interestRate + bankAccounts.expenses
+    bankAccounts.winterest
+  }
+} 
+
+
+# Exercise 7
+# Three students have estimated annual expenditures for food, housing, 
+# and fun of: (in thousands of dollars)
+
+house <- c(4.8, 3.8, 5.7); # All three of these objects are the same as in question 6
+food <- c(3.5, 4.3, 5.0); 
+fun <- c(7.8, 2.1, 10.5); 
+
+#and incomes (through TAships) of 
+
+income <- c(21, 21, 21); # This is also the same as in question 6
+
+# Modify the 5-year interest-compounding code from #5 and #6 so that it runs
+# from 2015-2020 and so that in odd numbered years students 1 and 3 get trust 
+# fund disbursements of $5000. (hint the modulus function %% will be helpful)
+
+bankAccounts <- c(10, 9.2, 5.6);
+
+for (year in 1:5) { # Adding years 1:5 into object year
+  for (person in 1:length(bankAccounts)) { # Adding 1:length of quantity of bankAccounts
+    if (year %% 2 == 1){ # Criteria to only select odd years
+      if (person %% 2 == 1){ # Criteria to only select person 1 and 3
+        bankAccounts[person] <- bankAccounts[person] + 5 # Criteria to only use bankAccounts of
+        # person 1 and 3, and only adding 5 to those accounts
+      }
+    }
+  }
+}
+bankAccounts
