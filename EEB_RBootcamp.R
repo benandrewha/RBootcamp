@@ -4,7 +4,7 @@ install.packages("ggplot2")
 install.packages(c("plyr", "reshape2"))
 
 # Chapter 9: Data structures in R
-# Section 1: Vectors
+# Section 9.1: Vectors
 
 # 9.1.0.0.1 Exercise - Vectors
 # %% is an arithmetic operation that provides remainder for division equation
@@ -133,8 +133,9 @@ x <- seq(from = 10,
 x[seq(1, 10, by = 2)]
 
 
-# Chapter 9: Matrices and arrays
-# Section 2: Creating matrices
+
+# Chapter 9.2: Matrices and arrays
+# Section 9.2.1: Creating matrices
 X <- matrix(c(1,2,3,4,5,6), nrow = 2, ncol = 3); X
 # This creates a matrix with 2 rows and 3 columns and populates each field with 1:6
 # Note: 1:6 populates matrix down the columns first
@@ -188,3 +189,14 @@ cbind(C, D) # This does not work because the C vector has 3 col and D vector
 # Sample below doesn't work since no object set for A, so not sure what to do???
 z <- A[2,3]
 A[2,2:3];
+
+
+
+# Section 9.3: Arrays
+# Generalizing a matrix to > or < 2 dimensions is the array
+# An array is a vector plus info on dimensions of the array
+# You can create an array from a vector
+X <- array(1:24, dim = c(3,4,2)); X
+# The c(3, 4, 2) means 3 rows, 4 col, 2 separate matrices
+
+# Arrays are filled in a particular order
