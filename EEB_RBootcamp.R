@@ -222,3 +222,8 @@ is.matrix(x) # Confirms if argument is an actual matrix. Thus, it's TRUE
 data.url <- "http://kingaa.github.io/R_Tutorial/ChlorellaGrowth.csv"
 dat <- read.csv(data.url,comment.char='#')
 dat
+
+# 9.6.0.0.1 Exercise - Data frames - NOT WORKING
+data.url.2 <- "http://kingaa.github.io/R_Tutorial/hurricanes.csv"
+dat.2 <- read.csv(hurricanes.csv)
+dat.2
