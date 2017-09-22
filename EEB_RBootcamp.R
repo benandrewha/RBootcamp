@@ -131,3 +131,33 @@ x <- seq(from = 10,
          to = 100, 
          by = 10)
 x[seq(1, 10, by = 2)]
+
+
+# Chapter 9: Matrices and arrays
+# Section 2: Creating matrices
+X <- matrix(c(1,2,3,4,5,6), nrow = 2, ncol = 3); X
+# This creates a matrix with 2 rows and 3 columns and populates each field with 1:6
+# Note: 1:6 populates matrix down the columns first
+
+A <- matrix(1:9, nrow = 3, ncol = 3, byrow = TRUE); A
+# This creates a matrix in a similar way, except now 1:9 populates matrix by row first
+# R recycles the index provided if matrix dimensions are larger than quantity of values
+
+matrix(1, nrow = 50, ncol = 50)
+# Matrix above creates 50x50 and populates each field with 1
+
+#9.2.1.0.1 Exercise - creating matrices
+v <- rep(1:2, 4)
+v
+# Note how code above makes repetition 1, 2, 1, 2, and not 1, 1, 2, 2
+# To do 1, 1, 2, 2, use rep(1:2, each = 4)
+
+x <- matrix(v, nrow = 2, ncol = 4)
+x
+
+# 9.2.1.0.2 Exercise - creating matrices
+# Use rnorm and matrix to create a 5×75×7 matrix of Gaussian random numbers
+# with mean 1 and standard deviation 2
+example <- rnorm(n, mean = 1, sd = 2)
+example.matrix <- matrix(example, nrow = 5, ncol = 7)
+example.matrix
