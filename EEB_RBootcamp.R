@@ -211,3 +211,14 @@ is.matrix(x) # Confirms if argument is an actual matrix. Thus, it's TRUE
 ?is.array
 ?is.matrix
 
+# Chapter 9.6: Dataframes
+# Functions like cbind() only work if the vectors to be combined are the same
+# type, so either both numerical or qualitative/logical. Data frames are hybrids
+# enabling combing both types
+# Note: You can turn a data frame into a matrix (using as.matrix(), but only 
+# if all variables are of the same class) and a matrix into a data frame
+# (using  as.data.frame() func).
+
+data.url <- "http://kingaa.github.io/R_Tutorial/ChlorellaGrowth.csv"
+dat <- read.csv(data.url,comment.char='#')
+dat
