@@ -200,3 +200,14 @@ X <- array(1:24, dim = c(3,4,2)); X
 # The c(3, 4, 2) means 3 rows, 4 col, 2 separate matrices
 
 # Arrays are filled in a particular order
+
+# 9.3.0.0.1 Exercise - arrays
+# What happens when we set the dimension attribute on a vector? For example:
+x <- seq(1,27) # Inputs 1:27 into object x
+dim(x) <- c(3,9) # Inputs values 3 and 9 into dim(x) object
+dim(x)
+is.array(x) # Confirms if argument is an actual array. Thus, it's TRUE
+is.matrix(x) # Confirms if argument is an actual matrix. Thus, it's TRUE
+?is.array
+?is.matrix
+
