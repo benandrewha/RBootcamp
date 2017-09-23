@@ -563,3 +563,41 @@ for (year in 1:5) { # Adding years 1:5 into object year
   }
 }
 bankAccounts
+
+
+# Exercise 8
+# Use a while loop to sum all numbers from 1:17. You will need to use a 
+# counter variable (like index seen in class).
+
+sum(1:17)
+x = 0 # Set x = 0, so then it will increase depending on x + j
+j = 1 # Set j = 1, so then it can be added to x as j increases by 1 so long as its < 18
+while (j < 18){
+  (x <- x + j);
+  (j <- j + 1) # j is the counter variable. Without it, loop would be infinite
+}
+x
+# 1st iteration: x = 1 and j = 2
+# 2nd iteration: x = 3 and j = 3, as x = x + j
+# 3rd iteration: x = 6 and j = 4
+
+
+# Exercise 9
+# write a function takes a number, and prints ‘small’ if number less than or 
+# equal to -1; ‘medium’ if between -1 and + 1’big’ if greater than or equal to + 1
+
+length(n)
+n <- c(-3:3)
+for(ii in 1:length(n)){
+  if(n[ii] <= -1){ 
+    cat(n[ii], 'Small', sep = '\t', fill = T)
+  }
+  if(n[ii] > -1 & n[ii] < 1){
+    cat(n[ii], 'Medium', sep = '\t', fill = T)
+  }
+  if(n[ii] >= 1){
+    cat(n[ii], 'Large', sep = '\t', fill = T)
+  }
+}
+# NOTE: using [ii] selects a specific value within the vector n <- c(-3, 3). 
+# If you do n by itself, then it is only listing all the values you assigned to it.
