@@ -315,7 +315,8 @@ head(s1) # Saves you from printing all random values and breaking your computer
 s3 <- rnorm(1000, mean = 0, sd = 10)
 
 pdf(file="Normal_hist.pdf", width = 4, height = 7) # preps to save your histogram as 
-# a pdf. Automatically saved into your current working directory. This func opens file
+# a pdf. Automatically saved into your current working directory
+# This func opens a file
 
 par(mfrow = c(2, 1), mar = c(4, 4, 3, 2)) # sets plotting area and margins
 # mfrow = 2 rows, 1 col
@@ -387,8 +388,9 @@ pdf(file = "Normal_boxplot.pdf")
 # c()             combines vectors with no organization.
 #                 Example: c(s1, s3) outputs 2000 values
 
-#If you do $breaks for each vector, you will get different sets of breaks because
-# each data vector contains diff data (e.g., differing std dv)
+# If you do $breaks for each vector, you will get different sets of breaks because
+# each data vector contains diff data (e.g., differing std dv) so if you combine
+# two data sets, they must have the same bins
 bins <- seq(-30, 30, by = 1) # establish your own bins to be applied consistently
 # to both data sets
 
@@ -402,9 +404,12 @@ min(s3)
 # If this happens, modify your bins to fall within max range
 # Still not working, not sure why
 barplot(rbind(counts_s1, counts_s3),
+        col = c(2, 4),
         beside = TRUE, # puts bars beside one another. If false, they will overlap
-        names = ) 
-#Incomplete code
+        names.arg = seq(-10, 9.5, by = 1),
+        xlab = "Value",
+        ylab = "Count") 
+# Incomplete code. Didn't read the slide quick enough
 
 sum(s1 > 3) # Returns quantity of values in s1 that are > 3
 
@@ -601,3 +606,76 @@ for(ii in 1:length(n)){
 }
 # NOTE: using [ii] selects a specific value within the vector n <- c(-3, 3). 
 # If you do n by itself, then it is only listing all the values you assigned to it.
+
+
+
+### R Bootcamp Day I Exercises - September 25, 2017
+# Lohmueller Bootcamp Exercise I
+
+# Exercise 1
+# Write a function (called “get_heights”) in R to draw a sample of individuals 
+# (either 100 or 1000) from the population. Hint: You will want to use “rnorm”
+# within your function. Store the random heights that you’ve generated in
+# a variable called “heights”.
+
+get_heights <- function(x) {
+  x <- rnorm(1000, mean = 69, sd = 10)
+  return(x)
+}
+heights <- get_heights()
+head(heights)
+
+# Exercise 2 and 3
+# Within your function, compete the avg height from your "heights" vector
+# Make your function return the avg height
+
+mean(heights) # Does this count as "within" your function?
+
+# Exercise 4
+# Use a “for” loop to call your “get_heights” function 1000 times with taking
+# a sample of size 100 from the population. Save the mean height from each
+# replicate in a vector called “mean_heights_100”.
+
+samples.100 = 100
+p <- list(mode = "vector", length = samples.100)
+for(i in 1:1000){
+  mean_heights_100 <- p[[i]] <- get_heights()
+}
+mean_heights_100
+
+# Exercise 5
+# Use a “for” loop to call your “get_heights” function 1000 times, with
+# taking a sample of size 1000 from the population. Save the mean height
+# from each replicate in a vector called “mean_heights_1000”.
+
+samples.1000 = 1000
+p <- list(mode = "vector", length = samples.1000)
+for(i in 1:1000){
+  mean_heights_1000 <- p[[i]] <- get_heights()
+}
+mean_heights_1000
+
+# Exercise 6
+# Plot a histogram of the distribution of the average heights for your
+# sample size of 100 and 1000 individuals. The two sets of data should
+# be plotted on the same axes. Add a legend. Label the axes. Plot the data
+# from the 100 samples in red and the data from the 1000 samples in blue.
+
+par(mfrow=c(1,1), mar=c(4, 4, 3, 2))
+bins <- seq(-10, 10, by = 1) 
+
+hist(mean_heights_100, breaks = bins)$breaks
+hist(mean_heights_1000, breaks = bins)$breaks
+counts_100 <- hist(mean_heights_100, breaks = bins)$counts
+counts_1000 <- hist(mean_heights_1000, breaks = bins)$counts
+# Uh oh. Both counts read back an error because the max(s3) is larger than 10
+max(s3)
+min(s3)
+# If this happens, modify your bins to fall within max range
+# Still not working, not sure why
+barplot(rbind(counts_100, counts_1000),
+        col = c(2, 4),
+        beside = TRUE, # puts bars beside one another. If false, they will overlap
+        names.arg = seq(-10, 9.5, by = 1),
+        xlab = "Value",
+        ylab = "Count")
