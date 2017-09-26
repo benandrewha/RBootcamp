@@ -618,42 +618,50 @@ for(ii in 1:length(n)){
 # within your function. Store the random heights that you’ve generated in
 # a variable called “heights”.
 
-get_heights <- function(x) {
-  x <- rnorm(1000, mean = 69, sd = 10)
-  return(x)
+get_heights <- function(x) {  
+  y <- rnorm(rsample, mean = 69, sd = 10) # This is to simulate random sample
+  return(y) # rather than the quantity of the random sample
 }
-heights <- get_heights()
+heights <- get_heights(1000) # This is to retrieve a specific quantity of the rsample
 head(heights)
+# in the first line, x = the value that you would input into the func
+# y = the value that will be produced by the func
+# both variables should be diff to logically represent diff responsibilities
 
 # Exercise 2 and 3
-# Within your function, compete the avg height from your "heights" vector
+# Within your function, compute the avg height from your "heights" vector
 # Make your function return the avg height
 
-mean(heights) # Does this count as "within" your function?
+get_heights <- function(x) { 
+  y <- rnorm(x, mean = 69, sd = 10)
+  mean.y <- mean(y)
+  return(mean.y)
+}
+
+# object = something that has stored info
+# variable = something with stored with one value (numerical or string)
+# vector = something stored with a list of values
 
 # Exercise 4
 # Use a “for” loop to call your “get_heights” function 1000 times with taking
 # a sample of size 100 from the population. Save the mean height from each
 # replicate in a vector called “mean_heights_100”.
 
-samples.100 = 100
-p <- list(mode = "vector", length = samples.100)
+mean_heights_100 = numeric() # creates empty vector w/ infinite spaces for unknown values
 for(i in 1:1000){
-  mean_heights_100 <- p[[i]] <- get_heights()
+  mean_heights_100 <- c(mean_heights_100, get_heights(100))
 }
-mean_heights_100
+# The mean_heights_100 line creates the vector to actually have 1000 empty slots
 
 # Exercise 5
 # Use a “for” loop to call your “get_heights” function 1000 times, with
 # taking a sample of size 1000 from the population. Save the mean height
 # from each replicate in a vector called “mean_heights_1000”.
 
-samples.1000 = 1000
-p <- list(mode = "vector", length = samples.1000)
+mean_heights_1000 = numeric() 
 for(i in 1:1000){
-  mean_heights_1000 <- p[[i]] <- get_heights()
+  mean_heights_1000 <- c(mean_heights_1000, get_heights(1000))
 }
-mean_heights_1000
 
 # Exercise 6
 # Plot a histogram of the distribution of the average heights for your
@@ -661,21 +669,35 @@ mean_heights_1000
 # be plotted on the same axes. Add a legend. Label the axes. Plot the data
 # from the 100 samples in red and the data from the 1000 samples in blue.
 
-par(mfrow=c(1,1), mar=c(4, 4, 3, 2))
-bins <- seq(-10, 10, by = 1) 
+max(mean_heights_100)
+min(mean_heights_100)
 
-hist(mean_heights_100, breaks = bins)$breaks
+max(mean_heights_1000)
+min(mean_heights_1000)
+
+par(mfrow=c(1,1), mar=c(4, 4, 3, 2))
+bins <- seq(65, 73, by = 0.5) # the groupings along x axis
+# seq (min, max, by); the min should be 1 unit less than the actual min value (65)
+# but R has an error when you do 1 unit above the actual max (72)
+# Instead, for max, used 72 to avoid error and kept min as true min
+# The by = how R will separate the diff values that are on the fence betw 2 values
+# Example: 62.49 will go into bin 62 and 62.56 will go into bin 63 if by = 0.5
+
+hist(mean_heights_100, breaks = bins)$breaks 
 hist(mean_heights_1000, breaks = bins)$breaks
-counts_100 <- hist(mean_heights_100, breaks = bins)$counts
+counts_100 <- hist(mean_heights_100, breaks = bins)$counts # the quantity of data that falls into that bin
 counts_1000 <- hist(mean_heights_1000, breaks = bins)$counts
-# Uh oh. Both counts read back an error because the max(s3) is larger than 10
-max(s3)
-min(s3)
-# If this happens, modify your bins to fall within max range
-# Still not working, not sure why
+
+pdf(file="RBootcamp_Lohmueller_Barplot.pdf", width=6,height=6);
 barplot(rbind(counts_100, counts_1000),
-        col = c(2, 4),
+        col = c("red", "blue"),
         beside = TRUE, # puts bars beside one another. If false, they will overlap
-        names.arg = seq(-10, 9.5, by = 1),
-        xlab = "Value",
+        names.arg = seq(65, 72.5, by = 0.5), # these need to match the defined bins
+        xlab = "Average height (inches)",
         ylab = "Count")
+
+legend(0,400,c("n = 100","n = 1000"),lwd=4,col=c("red", "blue"),cex=1)
+# legend (x, y) for location on quadrant
+# cex = size of legend box. May need to reset the hist code too
+
+dev.off()
