@@ -701,3 +701,247 @@ legend(0,400,c("n = 100","n = 1000"),lwd=4,col=c("red", "blue"),cex=1)
 # cex = size of legend box. May need to reset the hist code too
 
 dev.off()
+
+
+
+
+##### R Bootcamp Day II - September 27, 2017
+### Introduction to modeling - Lloyd-Smith
+
+# Pseudo-code Exercise
+# N(t + 1) = R * N(t)
+# set N = 100, R = 1.05, loop over 10 yrs, each year update popu size by N * R
+
+# General layout of modeling scripts
+# 1) Setup statements, as needed
+# 2) Input data, set parameters, and/or set initial conditions
+# 3) Perform calculations
+# 4) Display results via plot, saving, or showing on-screen
+# Actually copy/pasting this framework is a useful habit: play out the program in pseudocode, then use pseudocode to ... idk
+
+
+# Exercise: Creating first model
+# Setup statements, as needed
+# N/A
+
+# Input data and set parameters
+N = 100
+R = 1.05
+
+# Initialize variable to vector of NA values
+NN <- matrix(NA, nrow = 1, ncol = 11) # Similar idea as the line above, but this allows you to modify a specific value, if needed 
+NN[1] <- N # set first value to initial condition
+
+# Use a loop to iterate the model
+for(tt in 1:10){ # **while** loop is another potential outcome
+  NN[tt + 1] <- R * NN[tt]
+}
+
+# Perform calculations and plot results
+plot (1:11, NN, 
+      xlab = "time", 
+      ylab = "N", 
+      col = "blue")
+
+# Now how can you modify this code so you can easily adjust how long the simulation runs?
+# Set new parameter
+ttMax <- 10
+for(tt in 1:ttMax){ 
+  NN[tt + 1] <- R * NN[tt]
+  break;
+}
+
+plot (1:(ttMax + 1), NN, 
+      xlab = "time", 
+      ylab = "N", 
+      col = "blue")
+
+
+# Create a discrete logistic model
+N = 100
+r = 1.05
+K = 300 # Carrying capacity
+NN <- matrix(NA, nrow = 1, ncol = 11)
+NN[1] <- N
+ttMax <- 10
+
+for(tt in 1:ttMax){ 
+  NN[tt + 1] <- NN[tt]*(1 + r*(1 -(NN[tt]/K)))
+}
+# Use () for functions
+# Use [] to select a value within a matrix
+# Also make sure to distinguish multiplication via * since () has diff definitions in R programming and can't tell the diff betw what you want to do
+
+plot (1:(ttMax + 1), NN, 
+      xlab = "time", 
+      ylab = "N", 
+      col = "blue")
+
+
+
+# Inputs: Default values for arguments
+numberify <- function(xx = 1, yy = 1, zz = 1){
+  myNumber <- xx * 100 + yy * 10 + zz
+  return(myNumber) 
+}
+numberify()
+numberify(3)
+numberify(3, 2)
+
+# Note: return() line required to stop func
+# You can also have multiple return() statements
+
+# How to program the discrete logistic model into a function
+geomFun <- function(R, N, ttMax){ # input original parameters into function()
+  NN <- rep(NA, ttMax + 1)
+  NN[1] <- N
+  for(tt in 1:ttMax){ # this the same as before
+    NN[tt + 1] <- R * NN[tt]
+  }
+plot (1:(ttMax+1), NN, # this is also the same as before
+      xlab = "time", 
+      ylab = "Population size", 
+      col = "blue",
+      lty = 2, # line type, either solid or dash
+      type = "l") # type, either points or lines between each data value 
+return(NN)
+}
+# ?par for definitions of lty and type
+# the diff types can either be values (e.g., "1") or words (e.g., "red")
+# if you run into an error, you should switch betw the two
+geomFun(1.05, 100, 10)
+
+
+# To make a plot of model summary output vs parameter value
+# Define parameter values
+# for parameter of interest, make a vector of values you want to consider
+N0 <- 100 # variable for 100 values
+popu.time <- 10 # population at time x
+rd <- 2 # growth rate
+
+# Initialize vector to hold summary values
+NN <- rep(NA, popu.time + 1) # create matrix with NA slots
+NN[1] <- N0
+
+# use a **for** loop repeatedly run the model and plot output
+# You are looping over the list of values you want to use for the parameter you’re varying. Each time through loop, run the model with the current parameter values and store the summary values in the ith element of your results vector
+
+for(r in 1:rd){
+  NN[r + 1] <- 
+}
+### Incomplete code. MUST FINISH. Review slides ###
+
+
+# Discrete-time models are seasonal systems, discretized data, easy coding
+# Continuous-time models are more complicated: non-seasonal systems, events occur at any time, easier math analysis
+# For continuous models, install.package ("deSolve")
+# use lsoda() func to create models
+
+
+
+### Working with data - Lohmueller
+# Use x = sample() to retrieve 1:20 at random with no replacement
+# Use x = sample(20, replace = TRUE) to allow replacement during randomness
+
+# Accessing vector elements
+# x = seq(50, 60) to assign values to a vector x
+# x[2] to retrieve the 2nd value within the vector
+# Remember: [] indicates a desired value within a vector. () is for func
+
+# apply() functions
+x <- seq(1, 10)
+y <- matrix(x, nrow = 2, ncol = 5)
+
+# Say you want to get mean of each col. You can use a **for** loop or **apply** func
+apply(y, 1, mean) # 1 refers to the row
+apply(y, 2, mean) # 2 refers to the col
+
+# HapMap data: 0, 1, 2 refers to genotypes
+# the rs####### is the sample number. So you can ignore, as needed
+getwd()
+snpsDataFrame=read.table('hapmap_CEU_r23a_chr2_ld-2.txt',header=TRUE)
+dim(snpsDataFrame) # displays dimensions(col, row)
+table(testSNP)
+
+rm(list = ls()) # This removes all objects you currently defined
+
+##### R Bootcamp Day II Exercises - September 27, 2017
+# Lloyd-Smith R Bootcamp Exercises I
+
+# Exercise a
+# Write a function that runs the Ricker model, plots the result, and returns the time series as an output. At minimum, your function should take all parameter values and initial conditions as input arguments
+# Note: K > 0 and r can take positive or negative values
+
+rickerFun <- function(r, n, ttMax, K){
+  NN <- rep(NA, ttMax + 1)
+  NN[1] <- n
+  for(tt in 1:ttMax){
+    NN[tt + 1] <- NN[tt]*exp(r*(1 - (NN[tt]/K))) # Note NN[tt + 1] and NN[tt] usages
+  }
+  plot (1:(ttMax + 1), NN,
+        xlab = "time", 
+        ylab = "Population size", 
+        col = "blue",
+        lty = 2,
+        type = "l")
+  return(NN)
+}
+rickerFun(3, 10, 10, 100)
+# rickerFun(r, n, ttMax, K)
+# r = growth rate, n = population, ttMax = time, K = carrying capacity
+
+
+# Exercise b
+##  Explore the dynamics of the model. Try to find combinations of parameter values that yield the following patterns:
+# Population decreases to n = 0.
+rickerFun(2, 0, 50, 10)
+
+# Population approaches stable equilibrium at n∗ = K, without oscillations.
+rickerFun(1, 100, 50, 1000)
+
+# Decaying oscillations around n∗ = K.
+rickerFun(2, 60, 100, 100)
+
+# Persistent, regular oscillations.
+rickerFun(2, 9.9, 100, 10)
+
+# Crazy, random-looking fluctuations (chaos).
+rickerFun(5, 60, 100, 100)
+
+## Which parameter is the key driver of these patterns?
+# Changing r (growth rate)
+
+
+# Exercise c
+# Choose six interesting values of this parameter. Write a script that makes an array of six plots showing the model dynamics for each of these values
+pdf(file="LloydSmith_6Plots.pdf", width=6,height=6)
+par(mfrow=c(2,3))
+
+zero <- rickerFun(2, 0, 50, 10)
+noOscil <- rickerFun(1, 100, 50, 1000)
+wOscil <- rickerFun(2, 60, 100, 100)
+chaos <- rickerFun(5, 60, 100, 100)
+random <- rickerFun(2, 23, 100, 5)
+persistent <- rickerFun(2, 9.9, 100, 10)
+
+dev.off()
+
+# Exercide d
+# Imagine n0 = 20 and K = 1000 for a certain population of deer that is growing according to the Ricker model. You are a wildlife manager, and are concerned about how long it will take for the population to reach half of its carrying capacity. That is, you want to know tK/2, the first year that nt ≥ K/2. Suppose your output time series is called nVec. Write an R command that will determine the index of the first element of nVec that is ≥ K/2.
+
+n = 20
+K = 1000
+nVec <- rickerFun(0.8, 20, 10, 1000)
+for (rmodel in 1:length(rickerFun(0.8, 20, 10, 1000))){
+  if(n >= K/2)
+    cat("\n")
+}
+which(nVec >= K/2) # use which() to find which index(es) are nVec >= K/2
+min(which(nVec >= K/2)) # use min() to find the minimum when nVec >= K/2
+nVec[min(which(nVec >= K/2))] # use nVec[] to find popu value at when the min when nVec >= K/2
+
+
+# Exercise e
+# Write a script that runs the necessary simulations and collects the
+# necessary data to plot how tK/2 depends on r, for the range of
+# r from 0.1 to 0.9.
