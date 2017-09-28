@@ -929,13 +929,7 @@ dev.off()
 # Exercide d
 # Imagine n0 = 20 and K = 1000 for a certain population of deer that is growing according to the Ricker model. You are a wildlife manager, and are concerned about how long it will take for the population to reach half of its carrying capacity. That is, you want to know tK/2, the first year that nt ≥ K/2. Suppose your output time series is called nVec. Write an R command that will determine the index of the first element of nVec that is ≥ K/2.
 
-n = 20
-K = 1000
 nVec <- rickerFun(0.8, 20, 10, 1000)
-for (rmodel in 1:length(rickerFun(0.8, 20, 10, 1000))){
-  if(n >= K/2)
-    cat("\n")
-}
 which(nVec >= K/2) # use which() to find which index(es) are nVec >= K/2
 min(which(nVec >= K/2)) # use min() to find the minimum when nVec >= K/2
 nVec[min(which(nVec >= K/2))] # use nVec[] to find popu value at when the min when nVec >= K/2
@@ -945,3 +939,18 @@ nVec[min(which(nVec >= K/2))] # use nVec[] to find popu value at when the min wh
 # Write a script that runs the necessary simulations and collects the
 # necessary data to plot how tK/2 depends on r, for the range of
 # r from 0.1 to 0.9.
+
+data <- seq(0.1, 0.9, by = 0.1)
+popu.data <- matrix(NA, nrow = 1, ncol = 9)
+for(ii in 1:length(data)){
+  data.2 <- rickerFun(data[ii], 20, 50, 1000) # to collect all data within parameters 0.1 >= r >= 0.9
+  popu.data[ii] <- min(which(data.2 >= K/2)) # returns year when popu exceeds >= K/2
+}
+
+plot(data, popu.data,
+     xlab = "growth rate (r)",
+     ylab = "time at K/2")
+
+# data[ii] instructs to pull one value of data at a time
+# Call the rickerFun() to pull population values at time K/2 
+# when 0.1 <= r <= 0.9
