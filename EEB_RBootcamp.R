@@ -1000,8 +1000,10 @@ plot_ly(x = r,
         scene = list(
           xaxis = list(title = "growth rate (r)"),
           yaxis = list(title = "carrying capacity (K)")))
-
 ?plot_ly
+
+
+
 
 ### R Bootcamp Day II Exercises - September 28, 2017
 # Lohmueller Bootcamp Exercise II
@@ -1017,12 +1019,11 @@ snps = as.matrix(snpsDataFrame) # convert dataframe into a matrix
 # Key for snps data: 0 = homozygous dominant, 1 = heterozygous, 2 = homozygous recessive
 
 
+
 # Exercise 1a
 # To start let’s revisit our tests of Hardy-Weinberg. Go back and perform the chi-square test for Hardy-Weinberg that we did in class on all SNPs in the “hapmap_CEU_r23a_chr2_ld.txt” file. Hint: you already have the code for this… Save your P-values in a vector called “pvals”.
 
 head(snpsDataFrame)
-snps.col <- snpsDataFrame[60,] # What you tried to do, but failed
-snps.names <- names(snpsDataFrame)
 chisq.test(x = snps,
            y = NULL,
            correct = TRUE,
@@ -1044,25 +1045,9 @@ compute_chisquare=function(x){
   return(chisq)
 }
 
+chisqs = apply(snps,1,compute_chisquare)
 
-compute_chisquare_2=function(x){
-  freq=sum(x,na.rm=TRUE)/(2.0*sum(!is.na(x)))
-  cnt0=sum(x==0,na.rm=TRUE)
-  cnt1=sum(x==1,na.rm=TRUE)
-  cnt2=sum(x==2,na.rm=TRUE)
-  obscnts=c(cnt0,cnt1,cnt2)
-  #print(obscnts)
-  n=sum(obscnts)
-  #here we use the built-in function for the chi-sq distribution:
-  exp_probs=c((1-freq)^2,2*freq*(1-freq),freq^2) #note, here we don't multiply by n
-  chisq<-chisq.test(obscnts,p=exp_probs, correct = FALSE)$statistic
-  return(chisq)
-}
-
-chisqs = apply(snps,1,compute_chisquare) # code works
-chisqs2 = apply(snps,1,compute_chisquare_2) # code not working
-
-pvals = pchisq(chisqs,1,lower.tail=FALSE) # worked, since only referring to chisqs vector
+pvals = pchisq(chisqs,1,lower.tail=FALSE)
 
 
 # Exercise 1b
@@ -1096,27 +1081,36 @@ num_pval # total number of pvals
 exp_pvals <- rep(NA, 1, 4014) # empty vector with 1 row, 4014 col to store data
 # Now try to create a loop so that it obtains the lowest pvalue + 1 and divids it by the num_pval. Then store all the data in exp.pvals vector
 for(ii in 1:length(pvals)){
-  exp_pvals[ii] <- (pvals[ii] + 1) / num_pval
+  exp_pvals[ii] <- ii / num_pval 
 }
-exp_pvals
+# you can use ii without []. In this case, it refers to a number
+head(exp_pvals)
 
 
 # Exercise 1e
 # The observed P-values in the “pvals” vector are in the order that they SNPs appear across the chromosome. We need to sort them,  smallest to largest. Use the “sort” function to sort the P-values. Store them in the vector “sort_pvals”.
 
-sort_pval <- sort(exp_pvals, decreasing = TRUE)
-head(exp_pvals) # not in decreasing order?
+sort_pval <- sort(pvals)
+head(sort_pval)
 
 # Exercise 1f
 # In order to see what is happening with the small P-values (these are the ones we really care about), people often take the –log10(Pvalue). Find the –log10 of the observed and expected P-values. Store these in the vector “log_sort_pvals” and “log_exp_pvals”.
 
-log_sort_pvals <- -log10(sort_pval) # these have the same data?
-log_exp_pvals <- -log10(sort_pval)
+log_sort_pval <- -log10(sort_pval)
+log_exp_pvals <- -log10(exp_pvals)
 
 
 # Exercise 1g
 # You’re ready to make the QQ plot! Plot the “log_sort_pvals” vs. the “log_exp_pvals”
 
-qqplot(log_exp_pvals, log_sort_pvals,
+qqplot(log_exp_pvals, log_sort_pval,
        xlab = "-log10(expected P-value)",
        ylab = "-log10(observed P-value")
+
+# Exercise 1h
+# Add diagonal line to QQ plot
+
+abline(a = 0, # a = y intercept
+       b = 1, # b = slope
+       col = "forest green",
+       lwd = 3)
