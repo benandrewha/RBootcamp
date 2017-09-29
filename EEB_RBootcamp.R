@@ -964,10 +964,10 @@ plot(data, popu.data,
 # Write pseudo-code to do a joint sensitivity analysis for two parameters. That is, choose a vector of values you’d like to consider for both r and K, and choose a simple output from your model (e.g. population size at t = 10). Run the model for all possible combinations of these values and collect the results in a matrix with appropriate dimensions. Plot the results in some way. Hint: the straight-forward way to do this uses a ‘nested loop’.
 
 # Define your two parameter values for r and K, and make a vector of values you want to consider. Choose a simple output (e.g., population size at t = 10)
-# Initialize a matrix to collect all outputs, or a vector to hold summary values
-# Use **for** loop to fun model and collect output. Note: This loop is NOT over the timesteps of the model, but rather over the set of diff parameter values
+# Initialize a matrix to collect all outputs equivalent to the amount of values assigned to vector r and K, respectively
+# Use **for** loop to rickerFun model and collect output. Note: This loop is NOT over the timesteps of the model, but rather over the set of diff parameter values. This means you will need one **for** loop to collect ii values in r vector and another "nested" **for** loop to collect jj values in K vector
 # Use the func to run model in a single line within the loop and store the summary values in the i-th element of your results vector or store in a matrix with approprate dimensions
-# Plot results vector versus vector of parameter values
+# Google "contour" code and plot results vector versus vector of parameter values
 
 
 # Exercise g
@@ -1000,9 +1000,7 @@ plot_ly(x = r,
         scene = list(
           xaxis = list(title = "growth rate (r)"),
           yaxis = list(title = "carrying capacity (K)")))
-?plot_ly
-
-
+# the labels in plot_ly aren't working, but the code works successfully without that section by itself
 
 
 ### R Bootcamp Day II Exercises - September 28, 2017
