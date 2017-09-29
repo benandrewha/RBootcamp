@@ -954,3 +954,34 @@ plot(data, popu.data,
 # data[ii] instructs to pull one value of data at a time
 # Call the rickerFun() to pull population values at time K/2 
 # when 0.1 <= r <= 0.9
+
+
+# Exercise f
+# Write pseudo-code to do a joint sensitivity analysis for two parameters. That is, choose a vector of values you’d like to consider for both r and K, and choose a simple output from your model (e.g. population size at t = 10). Run the model for all possible combinations of these values and collect the results in a matrix with appropriate dimensions. Plot the results in some way. Hint: the straight-forward way to do this uses a ‘nested loop’.
+
+# Define your two parameter values for r and K, and make a vector of values you want to consider. Choose a simple output (e.g., population size at t = 10)
+# Initialize a matrix to collect all outputs, or a vector to hold summary values
+# Use **for** loop to fun model and collect output. Note: This loop is NOT over the timesteps of the model, but rather over the set of diff parameter values
+# Use the func to run model in a single line within the loop and store the summary values in the i-th element of your results vector or store in a matrix with approprate dimensions
+# Plot results vector versus vector of parameter values
+
+
+# Exercise g
+# Convert pseudo-code into an R script to do a two-dimensional sensitivity analysis, and create a visually appealing plot to summarize the results. (You will need to google for plotting commands, e.g. contour or surface plots).
+
+r <- seq(1, 3, by = 0.2) # growth rate vector from 1:3 with 0.2 increments
+K <- seq(100, 500, by = 100) # carrying capacity vector from 100:500 in 100 increments
+ttMax <- 10 # to run model over constant time 10 years
+n <- 350 # constant population size 350
+data.vec <- rep(NA, 1, 50) # initialize empty vector with 1 row 50 col to store first 50 data values to be produced by model
+discreteLogFunc <- function(n, ttMax, r, K)
+
+for (ii in 1:length(data.vec)){ # ii refers to slot of a value in 1:lengt(data.vec) vector
+  output <- discreteLogFunc(n, ttMax, r = r[ii], K = K[ii], PLOTFLAG = TRUE) # output for discrete logistic func at constant n and ttMax, but changing r and K parameters
+  data.vec[ii] <- output[ttMax] # store values collected from model based on the changing r and K parameters at ttMax = 10
+  plot(rbind(r, K), data.vec,
+     col = c("red", "green"),
+     xlab = "x axis",
+     ylab = "y axis")
+  return(data.vec)
+}
