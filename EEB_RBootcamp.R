@@ -865,8 +865,12 @@ table(testSNP)
 
 rm(list = ls()) # This removes all objects you currently defined
 
+
+
+
+
 ##### R Bootcamp Day II Exercises - September 27, 2017
-# Lloyd-Smith R Bootcamp Exercises I
+# Lloyd-Smith R Bootcamp Exercises II
 
 # Exercise a
 # Write a function that runs the Ricker model, plots the result, and returns the time series as an output. At minimum, your function should take all parameter values and initial conditions as input arguments
@@ -985,3 +989,30 @@ for (ii in 1:length(data.vec)){ # ii refers to slot of a value in 1:lengt(data.v
      ylab = "y axis")
   return(data.vec)
 }
+
+
+
+
+### R Bootcamp Day II Exercises - September 28, 2017
+# Lohmueller Bootcamp Exercise II
+
+getwd()
+setwd("/Users/BenjaminHa/Box Sync/RBootcamp/RBootcamp")
+snpsDataFrame=read.table('hapmap_CEU_r23a_chr2_ld-2.txt', header=TRUE) # load data
+phenoDataFrame=read.table('pheno.sim.2014-2.txt', header=TRUE) # load data
+snps=as.matrix(snpsDataFrame) # convert dataframe into a matrix
+
+# dim() shows dimenstions
+# names() shows col names
+# Key for snps data: 0 = homozygous dominant, 1 = heterozygous, 2 = homozygous recessive
+
+head((snpsDataFrame))
+snps.col <- snpsDataFrame[60,]
+snps.names <- names(snpsDataFrame)
+chisq.test(x = snps,
+           y = NULL,
+           correct = TRUE,
+           p = rep(1/length(x),length(x)), 
+           rescale.p = FALSE,
+           simulate.p.value = FALSE, 
+           B = 2000)
