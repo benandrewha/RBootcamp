@@ -1114,3 +1114,36 @@ abline(a = 0, # a = y intercept
        b = 1, # b = slope
        col = "forest green",
        lwd = 3)
+
+
+# Exercise 2a
+# Load the file “pheno.sim.2014.txt”. Store the phenotypes in a data frame called “zz”. The second column in this file contains the blood glucose measurements. Hint: you probably want to use “header=T” in the “read.table” command.
+
+phenoDataFrame = read.table('pheno.sim.2014-2.txt', header=TRUE)
+zz = as.matrix(phenoDataFrame)
+
+
+# Exercise 2b
+# Find the value of the phenotype such that 25% of the individuals have a phenotype LESS than this value.
+
+quantile(zz) # will show all quantile values
+quantile(zz, 0.25)
+
+# Exercise 2c
+# Find the value of the phenotype such that 25% of the individuals have a phenotype GREATER than this value (i.e. 75% of the individuals have a phenotype LESS than this value). 
+
+quantile(zz, 0.75)
+
+# Exercise 2d
+# Make a density plot of the distribution of phenotypes (i.e. the blood glucose levels). Add vertical lines to the plot to denote the 25% and 75% tails of the distribution.
+
+pdf(file="Phenotype_density.pdf", width=6,height=6)
+par(mfrow=c(1,1), mar=c(4, 4, 3, 2)) #sets plotting area and margins
+plot(density(zz),
+     col = 2,
+     lwd = 4,
+     xlab = "Value",
+     main = "Phenotype density plot")
+abline(v=quantile(zz,0.25),col='black') # v = veritcal line
+abline(v=quantile(zz,0.75),col='black') # can do h = horizontal if needed
+dev.off()
