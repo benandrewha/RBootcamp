@@ -973,25 +973,35 @@ plot(data, popu.data,
 # Exercise g
 # Convert pseudo-code into an R script to do a two-dimensional sensitivity analysis, and create a visually appealing plot to summarize the results. (You will need to google for plotting commands, e.g. contour or surface plots).
 
+
 r <- seq(1, 3, by = 0.2) # growth rate vector from 1:3 with 0.2 increments
+length(r)
 K <- seq(100, 500, by = 100) # carrying capacity vector from 100:500 in 100 increments
+length(K)
 ttMax <- 10 # to run model over constant time 10 years
 n <- 350 # constant population size 350
-data.vec <- rep(NA, 1, 50) # initialize empty vector with 1 row 50 col to store first 50 data values to be produced by model
-discreteLogFunc <- function(n, ttMax, r, K)
+data.vec <- matrix(NA, nrow=length(K), ncol=length(r)) # initialize empty vector with 5 row 11 col to store data
 
-for (ii in 1:length(data.vec)){ # ii refers to slot of a value in 1:lengt(data.vec) vector
-  output <- discreteLogFunc(n, ttMax, r = r[ii], K = K[ii], PLOTFLAG = TRUE) # output for discrete logistic func at constant n and ttMax, but changing r and K parameters
-  data.vec[ii] <- output[ttMax] # store values collected from model based on the changing r and K parameters at ttMax = 10
-  plot(rbind(r, K), data.vec,
-     col = c("red", "green"),
-     xlab = "x axis",
-     ylab = "y axis")
-  return(data.vec)
+for (ii in 1:length(r)){ # ii refers to slot of a value in 1:lengt(r) vector
+  for (jj in 1:length(K)){ # jj refers 
+  output <- rickerFun(n, ttMax, r = r[ii], K = K[jj]) # output for discrete logistic func at constant n and ttMax, but changing r and K parameters
+  data.vec[jj, ii] <- output[ttMax] # store values collected from model based on the changing r and K parameters at ttMax = 10
+  }
 }
+#data.vec[jj, ii] will fill output in rows first, then col
 
+install.packages("plotly")
+library(plotly)
 
+plot_ly(x = r,
+        y = K,
+        z = data.vec,
+        type = "contour",
+        scene = list(
+          xaxis = list(title = "growth rate (r)"),
+          yaxis = list(title = "carrying capacity (K)")))
 
+?plot_ly
 
 ### R Bootcamp Day II Exercises - September 28, 2017
 # Lohmueller Bootcamp Exercise II
