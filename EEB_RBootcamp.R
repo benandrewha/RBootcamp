@@ -998,16 +998,20 @@ for (ii in 1:length(data.vec)){ # ii refers to slot of a value in 1:lengt(data.v
 
 getwd()
 setwd("/Users/BenjaminHa/Box Sync/RBootcamp/RBootcamp")
-snpsDataFrame=read.table('hapmap_CEU_r23a_chr2_ld-2.txt', header=TRUE) # load data
-phenoDataFrame=read.table('pheno.sim.2014-2.txt', header=TRUE) # load data
-snps=as.matrix(snpsDataFrame) # convert dataframe into a matrix
+snpsDataFrame = read.table('hapmap_CEU_r23a_chr2_ld-2.txt', header=TRUE) # load data
+phenoDataFrame = read.table('pheno.sim.2014-2.txt', header=TRUE) # load data
+snps = as.matrix(snpsDataFrame) # convert dataframe into a matrix
 
 # dim() shows dimenstions
 # names() shows col names
 # Key for snps data: 0 = homozygous dominant, 1 = heterozygous, 2 = homozygous recessive
 
-head((snpsDataFrame))
-snps.col <- snpsDataFrame[60,]
+
+# Exercise 1a
+# To start let’s revisit our tests of Hardy-Weinberg. Go back and perform the chi-square test for Hardy-Weinberg that we did in class on all SNPs in the “hapmap_CEU_r23a_chr2_ld.txt” file. Hint: you already have the code for this… Save your P-values in a vector called “pvals”.
+
+head(snpsDataFrame)
+snps.col <- snpsDataFrame[60,] # What you tried to do, but failed
 snps.names <- names(snpsDataFrame)
 chisq.test(x = snps,
            y = NULL,
@@ -1016,3 +1020,93 @@ chisq.test(x = snps,
            rescale.p = FALSE,
            simulate.p.value = FALSE, 
            B = 2000)
+
+compute_chisquare=function(x){
+  freq=sum(x,na.rm=TRUE)/(2.0*sum(!is.na(x)))
+  cnt0=sum(x==0,na.rm=TRUE)
+  cnt1=sum(x==1,na.rm=TRUE)
+  cnt2=sum(x==2,na.rm=TRUE)
+  obscnts=c(cnt0,cnt1,cnt2)
+  #print(obscnts)
+  n=sum(obscnts)
+  expcnts=c((1-freq)^2,2*freq*(1-freq),freq^2)*n
+  chisq=sum((obscnts-expcnts)^2/expcnts)
+  return(chisq)
+}
+
+
+compute_chisquare_2=function(x){
+  freq=sum(x,na.rm=TRUE)/(2.0*sum(!is.na(x)))
+  cnt0=sum(x==0,na.rm=TRUE)
+  cnt1=sum(x==1,na.rm=TRUE)
+  cnt2=sum(x==2,na.rm=TRUE)
+  obscnts=c(cnt0,cnt1,cnt2)
+  #print(obscnts)
+  n=sum(obscnts)
+  #here we use the built-in function for the chi-sq distribution:
+  exp_probs=c((1-freq)^2,2*freq*(1-freq),freq^2) #note, here we don't multiply by n
+  chisq<-chisq.test(obscnts,p=exp_probs, correct = FALSE)$statistic
+  return(chisq)
+}
+
+chisqs = apply(snps,1,compute_chisquare) # code works
+chisqs2 = apply(snps,1,compute_chisquare_2) # code not working
+
+pvals = pchisq(chisqs,1,lower.tail=FALSE) # worked, since only referring to chisqs vector
+
+
+# Exercise 1b
+# What proportion of P-values from the test (put the vector called “pvals”) are <0.05? What proportion are <0.01? Are any <0.001?
+
+high.pval <- subset(pvals, pvals < 0.05)
+length(high.pval) / length(pvals) # proportion of pvals < 0.05
+
+mid.pval <- subset(pvals, pvals < 0.01)
+length(mid.pval) / length(pvals) # proportion of pvals < 0.01
+
+low.pval <- subset(pvals, pvals < 0.001)
+length(low.pval) / length(pvals) # proportion of pvals < 0.001
+
+
+# Exercise 1c
+# How many SNPs were tested for departures from Hardy-Weinberg equilibrium? Hint: How many P-values do you have? Second hint: Try using the “length” function. Save this value in the variable called “num_pval”.
+
+num_pval <- length(pvals)
+num_pval # quantity of SNPs tested
+
+# Exercise 1d
+# Say that you have “num_pval” total P-values. Assuming that the null hypothesis is true (i.e. all SNPs are in Hardy-Weinberg), the smallest P-values is expected to be 1/num_pval. The second smallest P-value is expected to be 2/num_pval. The third smallest P-value is expected to be 3/num_pval, etc. The largest P-value is expected to be num_pval/num_pval (or 1). Calculate the vector of expected P-values for the chi-square test. Save these in the vector called “exp_pvals”.
+
+min(pvals) / num_pval
+max(pvals)
+min.pvals <- min(pvals)
+min.pvals
+
+num_pval # total number of pvals
+exp_pvals <- rep(NA, 1, 4014) # empty vector with 1 row, 4014 col to store data
+# Now try to create a loop so that it obtains the lowest pvalue + 1 and divids it by the num_pval. Then store all the data in exp.pvals vector
+for(ii in 1:length(pvals)){
+  exp_pvals[ii] <- (pvals[ii] + 1) / num_pval
+}
+exp_pvals
+
+
+# Exercise 1e
+# The observed P-values in the “pvals” vector are in the order that they SNPs appear across the chromosome. We need to sort them,  smallest to largest. Use the “sort” function to sort the P-values. Store them in the vector “sort_pvals”.
+
+sort_pval <- sort(exp_pvals, decreasing = TRUE)
+head(exp_pvals) # not in decreasing order?
+
+# Exercise 1f
+# In order to see what is happening with the small P-values (these are the ones we really care about), people often take the –log10(Pvalue). Find the –log10 of the observed and expected P-values. Store these in the vector “log_sort_pvals” and “log_exp_pvals”.
+
+log_sort_pvals <- -log10(sort_pval) # these have the same data?
+log_exp_pvals <- -log10(sort_pval)
+
+
+# Exercise 1g
+# You’re ready to make the QQ plot! Plot the “log_sort_pvals” vs. the “log_exp_pvals”
+
+qqplot(log_exp_pvals, log_sort_pvals,
+       xlab = "-log10(expected P-value)",
+       ylab = "-log10(observed P-value")
